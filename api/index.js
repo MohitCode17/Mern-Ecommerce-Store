@@ -3,10 +3,13 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
 // ======================== Utils ========================
+import { connectDatabase } from "./config/db.js";
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
+
+connectDatabase();
 
 // ======================== Middlewares ========================
 app.use(express.json());
