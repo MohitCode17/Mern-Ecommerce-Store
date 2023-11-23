@@ -44,7 +44,52 @@ export const registerUser = async (req, res) => {
 };
 
 // Login user controller
-export const loginUser = () => {};
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // validation
+    if (!email || !password) {
+      return res.status(400).json({ message: "Please provides all fields" });
+    }
+
+    // check user is a registered user or not
+    const validUser = await User.findOne({ email });
+
+    if (!validUser) {
+      return res.status(404).json({ message: "User not found !" });
+    }
+
+    // if validuser check password
+    const isValidPassword = await bcrypt.compare(password, validUser.password);
+
+    if (!isValidPassword) {
+      return res.status(404).json({ message: "Invalid credentials!" });
+    }
+
+    // send token
+    generateToken(res, validUser._id);
+
+    res.status(200).json({
+      _id: validUser._id,
+      username: validUser.username,
+      email: validUser.email,
+      isAdmin: validUser.isAdmin,
+    });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
 
 // logout user controller
-export const logoutUser = () => {};
+export const logoutUser = async (req, res) => {
+  try {
+    res.cookie("jwt", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
