@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 // ======================== Utils ========================
 import { connectDatabase } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 // ======================== Routers ========================
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // ======================== Error Handler ========================
 app.use((err, req, res, next) => {
