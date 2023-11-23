@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 
 // ======================== Utils ========================
 import { connectDatabase } from "./config/db.js";
+import authRoutes from "./routes/authRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -17,9 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // ======================== Routers ========================
-app.get("/test", (req, res) => {
-  res.send("Server is running");
-});
+app.use("/api/auth", authRoutes);
 
 // ======================== Error Handler ========================
 
