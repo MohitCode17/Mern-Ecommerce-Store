@@ -1,21 +1,22 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
+import { errorHandler } from "../utils/error.js";
 
 // Register user controller
-export const registerUser = async (req, res) => {
+export const registerUser = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
     // validation
     if (!username || !email || !password) {
-      return res.status(400).json({ message: "Please provides all fields" });
+      return next(errorHandler(400, "All fields are required !"));
     }
 
     // check if user already exists
     const isUserExist = await User.findOne({ email });
 
     if (isUserExist) {
-      return res.status(400).json({ message: "User already exists" });
+      return next(errorHandler(400, "User already exists !"));
     }
 
     // Hash Password
@@ -39,31 +40,31 @@ export const registerUser = async (req, res) => {
       isAdmin: user.isAdmin,
     });
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
 };
 
 // Login user controller
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     // validation
     if (!email || !password) {
-      return res.status(400).json({ message: "Please provides all fields" });
+      return next(errorHandler(400, "All fields are required !"));
     }
 
     // check user is a registered user or not
     const validUser = await User.findOne({ email });
 
     if (!validUser) {
-      return res.status(404).json({ message: "User not found !" });
+      return next(errorHandler(404, "User not found !"));
     }
 
     // if validuser check password
     const isValidPassword = await bcrypt.compare(password, validUser.password);
 
     if (!isValidPassword) {
-      return res.status(404).json({ message: "Invalid credentials!" });
+      return next(errorHandler(400, "Invalid Credentials !"));
     }
 
     // send token
@@ -76,12 +77,12 @@ export const loginUser = async (req, res) => {
       isAdmin: validUser.isAdmin,
     });
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
 };
 
 // logout user controller
-export const logoutUser = async (req, res) => {
+export const logoutUser = async (req, res, next) => {
   try {
     res.cookie("jwt", "", {
       httpOnly: true,
@@ -90,6 +91,6 @@ export const logoutUser = async (req, res) => {
 
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
 };

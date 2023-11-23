@@ -21,6 +21,12 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 
 // ======================== Error Handler ========================
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  const message = err.message || "Internal Server Error !";
+
+  return res.status(statusCode).json({ error: message });
+});
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
