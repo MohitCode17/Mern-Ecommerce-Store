@@ -36,6 +36,6 @@ router.put("/:id", authenticateUser, authorizeAdmin, updateCategory);
 // @desc    Remove category routes
 // method   DELETE
 // url      /api/category/:id
-router.put("/:id", authenticateUser, authorizeAdmin, removeCategory);
+router.delete("/:id", authenticateUser, authorizeAdmin, removeCategory);
 
 export default router;
