@@ -1,82 +1,39 @@
 import mongoose from "mongoose";
 
-// Review Schema
-const reviewSchema = new mongoose.Schema(
+const reviewSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    comment: {
-      type: String,
-      required: true,
-    },
-    rating: {
-      type: Number,
-      required: true,
-    },
+    name: { type: String, required: true },
+    rating: { type: Number, required: true },
+    comment: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
       required: true,
+      ref: "User",
     },
   },
   { timestamps: true }
 );
 
-// Product Schema
-const productSchema = new mongoose.Schema(
+const productSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    brand: {
-      type: String,
-      required: true,
-    },
+    name: { type: String, required: true },
+    image: { type: String, required: true },
+    brand: { type: String, required: true },
+    quantity: { type: Number, required: true },
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
-    image: {
-      type: String,
-      required: true,
-    },
-    quantity: {
-      type: Number,
-      required: true,
-    },
-    countInStock: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
+    description: { type: String, required: true },
     reviews: [reviewSchema],
-    numofReviews: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
-    rating: {
-      type: Number,
-      required: true,
-      default: 0,
-    },
+    rating: { type: Number, required: true, default: 0 },
+    numofReviews: { type: Number, required: true, default: 0 },
+    price: { type: Number, required: true, default: 0 },
+    countInStock: { type: Number, required: true, default: 0 },
   },
   { timestamps: true }
 );
 
 const Product = mongoose.model("Product", productSchema);
-
 export default Product;
