@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 // ======================== Utils ========================
 import { connectDatabase } from "./config/db.js";
@@ -8,6 +9,7 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import uploadRoute from "./routes/uploadRoute.js";
 
 dotenv.config();
 const app = express();
@@ -25,6 +27,10 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/upload", uploadRoute);
+
+const __dirname = path.resolve();
+app.use("/uploads", express.static(path.join(__dirname + "/uploads")));
 
 // ======================== Error Handler ========================
 app.use((err, req, res, next) => {
